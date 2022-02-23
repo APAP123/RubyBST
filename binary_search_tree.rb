@@ -32,8 +32,18 @@ class Tree
   end
 
   # Inserts a new node to the tree
-  def insert(value)
-    # todo
+  def insert(value, node = @root)
+    if value < node.data && node.left.nil?
+      return node.left = Node.new(value)
+    elsif value > node.data && node.right.nil?
+      return node.right = Node.new(value)
+    end
+
+    if value < node.data
+      insert(value, node.left)
+    else
+      insert(value, node.right)
+    end
   end
 
   # returns the node matching the given value
@@ -92,7 +102,9 @@ end
 # arr = ['F', 'D', 'J', 'B', 'E', 'G', 'K', 'A', 'C', 'I', 'H']
 # arr = ['F', 'D', 'J', 'B', 'E', 'G', 'B', 'K', 'A', 'C', 'I', 'H']
 arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-puts arr.sort.uniq
 tree = Tree.new(arr.sort.uniq)
 
+tree.pretty_print
+
+tree.insert(2)
 tree.pretty_print
