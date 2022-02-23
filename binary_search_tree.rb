@@ -1,6 +1,6 @@
 # Represents a node on the binary-search tree
 class Node
-  attr_accessor :data, :left_node, :right_node
+  attr_accessor :data, :left, :right
 
   def initialize(data = nil, left = nil, right = nil)
     @data = data
@@ -14,12 +14,25 @@ class Tree
   # todo
   attr_accessor :root
 
-  def initialize(root = nil)
-    @root = root
+  def initialize(array)
+    @root = build_tree(array)
   end
 
-  def build_tree(array)
-    # todo
+  # Builds binary-search tree from given array
+  def build_tree(array, node = Node.new(array.shift))
+    if node.nil?
+      node = Node.new(array.shift)
+      return node
+    end
+
+    array.each do |value|
+      if value < node.data
+        node.left = build_tree([value], node.left)
+      else
+        node.right = build_tree([value], node.right)
+      end
+    end
+    node
   end
 
   # Inserts a new node to the tree
@@ -71,4 +84,17 @@ class Tree
   def rebalance
     # todo
   end
+
+  # Method for printing BST to screen in a pretty manner (written by a fellow Odin Project student)
+  def pretty_print(node = @root, prefix = '', is_left = true)
+    pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+    puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+    pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+  end
 end
+
+arr = ['F', 'D', 'J', 'B', 'E', 'G', 'K', 'A', 'C', 'I', 'H']
+
+tree = Tree.new(arr)
+
+tree.pretty_print
