@@ -19,18 +19,15 @@ class Tree
   end
 
   # Builds binary-search tree from given array
-  def build_tree(array, node = Node.new(array.shift))
-    node = Node.new(array.shift) if node.nil?
+  def build_tree(array)
+    return Node.new(array[0]) if array.length == 1
+    return nil if array.empty? || array.nil?
 
-    array.each do |value|
-      next if value == node.data # skips duplicate values
+    mid = array.length / 2
+    node = Node.new(array[mid])
 
-      if value < node.data
-        node.left = build_tree([value], node.left)
-      else
-        node.right = build_tree([value], node.right)
-      end
-    end
+    node.left = build_tree(array[0..mid - 1])
+    node.right = build_tree(array[mid + 1, array.length])
     node
   end
 
@@ -93,8 +90,9 @@ class Tree
 end
 
 # arr = ['F', 'D', 'J', 'B', 'E', 'G', 'K', 'A', 'C', 'I', 'H']
-arr = ['F', 'D', 'J', 'B', 'E', 'G', 'B', 'K', 'A', 'C', 'I', 'H']
-
-tree = Tree.new(arr)
+# arr = ['F', 'D', 'J', 'B', 'E', 'G', 'B', 'K', 'A', 'C', 'I', 'H']
+arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
+puts arr.sort.uniq
+tree = Tree.new(arr.sort.uniq)
 
 tree.pretty_print
