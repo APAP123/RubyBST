@@ -46,9 +46,65 @@ class Tree
     end
   end
 
+  # Returns the amount of branches a node has
+  def branches(node)
+    return 'both' if !node.left.nil? && !node.right.nil?
+    return 'left' if !node.left.nil?
+    return 'right' if !node.right.nil?
+    return 'none' if node.left.nil? && node.right.nil?
+  end
+
+  # Returns parent of node with matching value
+  def get_parent(value, node = @root)
+    return node if node.left.data == value || node.right.data == value || node.nil?
+
+    if value < node.data
+      get_parent(value, node.left)
+    else
+      get_parent(value, node.right)
+    end
+  end
+
+  # Returns next highest valued node after the passed node
+  def find_next_highest(node)
+    return node if node.left.nil?
+
+    find_next_highest(node.left)
+  end
+
+  # Deletes the passed value from the tree
+  def delete(value)
+    node = find(value)
+    return if node.nil?
+
+    parent = get_parent(value)
+    case branches(node)
+    when 'none'
+      return parent.left = nil if parent.left.data == value
+      return parent.right = nil if parent.right.data == value
+    when 'left'
+      return parent.left = node.left if parent.left.data == value
+      return parent.right = node.left if parent.right.data == value
+    when 'right'
+      return parent.left = node.right if parent.left.data == value
+      return parent.right = node.right if parent.right.data == value
+    when 'both'
+      next_highest = find_next_highest(node.right)
+      delete(next_highest.data)
+      return parent.left.data = next_highest.data if parent.left.data == value
+      return parent.right.data = next_highest.data if parent.right.data == value
+    end
+  end
+
   # returns the node matching the given value
-  def find(value)
-    # todo
+  def find(value, node = @root)
+    return node if value == node.data || node.nil?
+
+    if value < node.data
+      find(value, node.left)
+    else
+      find(value, node.right)
+    end
   end
 
   # Traverses tree is breadth-first level order and yields each node to provided block
@@ -108,4 +164,7 @@ tree.pretty_print
 puts "\n\n\n"
 # tree.insert(2)
 tree.insert(23)
+tree.pretty_print
+tree.delete(4)
+puts "\n\n\n"
 tree.pretty_print
