@@ -33,15 +33,15 @@ class Tree
 
   # Inserts a new node to the tree
   def insert(value, node = @root)
-    if value < node.data && node.left.nil?
-      return node.left = Node.new(value)
-    elsif value > node.data && node.right.nil?
-      return node.right = Node.new(value)
-    end
+    return if value == node.data # prevents dupes
 
     if value < node.data
+      return node.left = Node.new(value) if node.left.nil?
+
       insert(value, node.left)
     else
+      return node.right = Node.new(value) if node.right.nil?
+
       insert(value, node.right)
     end
   end
@@ -105,6 +105,7 @@ arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 tree = Tree.new(arr.sort.uniq)
 
 tree.pretty_print
-
-tree.insert(2)
+puts "\n\n\n"
+# tree.insert(2)
+tree.insert(23)
 tree.pretty_print
