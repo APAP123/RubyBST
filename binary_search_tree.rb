@@ -20,12 +20,11 @@ class Tree
 
   # Builds binary-search tree from given array
   def build_tree(array, node = Node.new(array.shift))
-    if node.nil?
-      node = Node.new(array.shift)
-      return node
-    end
+    node = Node.new(array.shift) if node.nil?
 
     array.each do |value|
+      next if value == node.data # skips duplicate values
+
       if value < node.data
         node.left = build_tree([value], node.left)
       else
@@ -93,7 +92,8 @@ class Tree
   end
 end
 
-arr = ['F', 'D', 'J', 'B', 'E', 'G', 'K', 'A', 'C', 'I', 'H']
+# arr = ['F', 'D', 'J', 'B', 'E', 'G', 'K', 'A', 'C', 'I', 'H']
+arr = ['F', 'D', 'J', 'B', 'E', 'G', 'B', 'K', 'A', 'C', 'I', 'H']
 
 tree = Tree.new(arr)
 
