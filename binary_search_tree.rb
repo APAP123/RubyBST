@@ -74,6 +74,7 @@ class Tree
 
   # Deletes the passed value from the tree
   def delete(value)
+    # You can definitely simplify this
     node = find(value)
     return if node.nil?
 
@@ -107,22 +108,68 @@ class Tree
     end
   end
 
-  # Traverses tree is breadth-first level order and yields each node to provided block
-  def level_order
-    # todo
+  # Converts an array of nodes to an array of their respective values
+  def node_array_to_values(array)
+    result = []
+    array = array.reject { |element| element.nil?}
+    puts "New array: #{array}"
+    while array.any?
+      puts "enter array while loop"
+      node = array.shift
+      result.push(node.data) unless node.nil?
+    end
+    puts "result: #{result}"
+    result
   end
 
-  # Traverses tree in in-order depth-first, yielding nodes to provided block
+  def node_array2(array)
+    new_array = []
+    array.each do |element|
+      if element.is_a?(Integer)
+        new_array.push(element)
+      elsif element.is_a?(Node)
+        new_array.push(element.data)
+      end
+    end
+    new_array
+  end
+
+  # Traverses tree is breadth-first level order and yields each node to provided block
+  def level_order
+    queue = [@root]
+    node = queue[0]
+    index = 0
+    while index < queue.length
+      queue.push(node.left) unless node.left.nil?
+      queue.push(node.right) unless node.right.nil?
+      yield queue[index] if block_given?
+      index += 1
+      node = queue[index]
+    end
+    return node_array2(queue) unless block_given?
+  end
+
+  # Traverses tree in in-order (left, root, right) depth-first, yielding nodes to provided block
   def inorder
     # todo
   end
 
-  # Traverses tree in pre-order depth-first, yielding nodes to provided block
-  def preorder
-    # todo
+  # Traverses tree in pre-order (root, left, right) depth-first, yielding nodes to provided block
+  def preorder(node, result = [], &block)
+    return if node.nil?
+
+    result.push(node)
+
+    block.call node if block_given?
+
+    result.push(preorder(node.left, &block))
+    result.push(preorder(node.right, &block))
+    # return result.flatten unless block_given?
+    # return node_array_to_values(result.flatten) unless block_given?
+    return node_array2(result.flatten) unless block_given?
   end
 
-  # Traverses tree in post-order depth-first, yielding nodes to provided block
+  # Traverses tree in post-order (left, right, root) depth-first, yielding nodes to provided block
   def postorder
     # todo
   end
@@ -147,7 +194,7 @@ class Tree
     # todo
   end
 
-  # Method for printing BST to screen in a pretty manner (written by a fellow Odin Project student)
+  # Method for printing BST to screen in a pretty manner (preorderwritten by a fellow Odin Project student)
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
@@ -168,3 +215,15 @@ tree.pretty_print
 tree.delete(4)
 puts "\n\n\n"
 tree.pretty_print
+
+# tree.level_order do |node|
+#   puts "level order data is #{node.data}"
+# end
+
+# puts tree.level_order
+
+tree.preorder(tree.root) do |node|
+  puts "preorder data is #{node.data}"
+end
+puts "before no block"
+puts "preorder no block: #{tree.preorder(tree.root)}"
