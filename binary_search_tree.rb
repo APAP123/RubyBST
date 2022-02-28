@@ -110,19 +110,6 @@ class Tree
 
   # Converts an array of nodes to an array of their respective values
   def node_array_to_values(array)
-    result = []
-    array = array.reject { |element| element.nil?}
-    puts "New array: #{array}"
-    while array.any?
-      puts "enter array while loop"
-      node = array.shift
-      result.push(node.data) unless node.nil?
-    end
-    puts "result: #{result}"
-    result
-  end
-
-  def node_array2(array)
     new_array = []
     array.each do |element|
       if element.is_a?(Integer)
@@ -146,7 +133,7 @@ class Tree
       index += 1
       node = queue[index]
     end
-    return node_array2(queue) unless block_given?
+    return node_array_to_values(queue) unless block_given?
   end
 
   # Traverses tree in in-order (left, root, right) depth-first, yielding nodes to provided block
@@ -166,7 +153,7 @@ class Tree
     result.push(preorder(node.right, &block))
     # return result.flatten unless block_given?
     # return node_array_to_values(result.flatten) unless block_given?
-    return node_array2(result.flatten) unless block_given?
+    return node_array_to_values(result.flatten) unless block_given?
   end
 
   # Traverses tree in post-order (left, right, root) depth-first, yielding nodes to provided block
