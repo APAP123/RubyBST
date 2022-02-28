@@ -108,7 +108,7 @@ class Tree
     end
   end
 
-  # Converts an array of nodes to an array of their respective values
+  # Takes an array of nodes and returns an array of their respective values
   def node_array_to_values(array)
     new_array = []
     array.each do |element|
@@ -137,8 +137,14 @@ class Tree
   end
 
   # Traverses tree in in-order (left, root, right) depth-first, yielding nodes to provided block
-  def inorder
-    # todo
+  def inorder(node, result = [], &block)
+    return if node.nil?
+
+    result.push(inorder(node.left, &block))
+    result.push(node)
+    block.call node if block_given?
+    result.push(inorder(node.right, &block))
+    return node_array_to_values(result.flatten) unless block_given?
   end
 
   # Traverses tree in pre-order (root, left, right) depth-first, yielding nodes to provided block
@@ -151,14 +157,18 @@ class Tree
 
     result.push(preorder(node.left, &block))
     result.push(preorder(node.right, &block))
-    # return result.flatten unless block_given?
-    # return node_array_to_values(result.flatten) unless block_given?
     return node_array_to_values(result.flatten) unless block_given?
   end
 
   # Traverses tree in post-order (left, right, root) depth-first, yielding nodes to provided block
-  def postorder
-    # todo
+  def postorder(node, result = [], &block)
+    return if node.nil?
+
+    result.push(postorder(node.left, &block))
+    result.push(postorder(node.right, &block))
+    result.push(node)
+    block.call node if block_given?
+    return node_array_to_values(result.flatten) unless block_given?
   end
 
   # Returns height of given node
@@ -212,5 +222,17 @@ tree.pretty_print
 tree.preorder(tree.root) do |node|
   puts "preorder data is #{node.data}"
 end
-puts "before no block"
+puts "before no block pre"
 puts "preorder no block: #{tree.preorder(tree.root)}"
+
+tree.inorder(tree.root) do |node|
+  puts "preorder data is #{node.data}"
+end
+puts "before no block in"
+puts "inorder no block: #{tree.inorder(tree.root)}"
+
+tree.postorder(tree.root) do |node|
+  puts "postorder data is #{node.data}"
+end
+puts "before no block in"
+puts "postorder no block: #{tree.postorder(tree.root)}"
