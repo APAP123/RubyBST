@@ -56,7 +56,9 @@ class Tree
 
   # Returns parent of node with matching value
   def get_parent(value, node = @root)
-    return node if node.left.data == value || node.right.data == value || node.nil?
+    if node.nil? || (!node.left.nil? && node.left.data == value) || (!node.right.nil? && node.right.data == value)
+      return node
+    end
 
     if value < node.data
       get_parent(value, node.left)
@@ -186,14 +188,39 @@ class Tree
     return [depth(goal, node.left, level + 1), depth(goal, node.right, level + 1)].max
   end
 
+  # # Checks left subtree and right subtree of each node to see if height differences between the two is no more than one
+  # def balanced?(node = @root)
+  #   return true if node.nil?
+
+  #   return false if (height(node.left) - height(node.right)).abs > 1
+
+  #   return balanced?(node.left) && balanced?(node.right)
+  # end
+
   # Checks left subtree and right subtree of each node to see if height differences between the two is no more than one
-  def balanced?
-    # todo
+  # def balanced?(node = @root)
+  #   return true if node.nil?
+  #   puts "Current node: #{node.data}"
+  #   left_height = height(node.left)
+  #   right_height = height(node.right)
+  #   puts "LH: #{left_height}, RH: #{right_height}"
+  #   return true if (left_height - right_height).abs <= 1 && balanced?(node.left) && balanced?(node.right)
+
+  #   false
+  # end
+
+  # Checks left subtree and right subtree of each node to see if height differences between the two is no more than one
+  def balanced?(node = @root)
+    return true if node.nil?
+
+    return true if balanced?(node.left) && balanced?(node.right) && ((height(node.left) - height(node.right)).abs <= 1)
+
+    false
   end
 
   # Rebalances tree so that no node has a right subtree and left subtree with a height difference greater than one
   def rebalance
-    # todo
+    @root = Tree.new(inorder(@root).sort).root
   end
 
   # Method for printing BST to screen in a pretty manner (preorderwritten by a fellow Odin Project student)
@@ -210,13 +237,33 @@ arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 tree = Tree.new(arr.sort.uniq)
 
 tree.pretty_print
+puts "Balanced? #{tree.balanced?}"
 puts "\n\n\n"
 # tree.insert(2)
 tree.insert(23)
 tree.pretty_print
-tree.delete(4)
+puts "Balanced? #{tree.balanced?}"
 puts "\n\n\n"
+tree.delete(4)
 tree.pretty_print
+puts "Balanced? #{tree.balanced?}"
+tree.delete(5)
+tree.pretty_print
+puts "Balanced? #{tree.balanced?}"
+
+tree.insert(4)
+tree.pretty_print
+puts "Balanced? #{tree.balanced?}"
+
+tree.delete(3)
+tree.pretty_print
+puts "Balanced? #{tree.balanced?}"
+tree.delete(1)
+tree.pretty_print
+puts "Balanced? #{tree.balanced?}"
+tree.delete(7)
+tree.pretty_print
+puts "Balanced? #{tree.balanced?}"
 
 # tree.level_order do |node|
 #   puts "level order data is #{node.data}"
@@ -244,5 +291,9 @@ puts "postorder no block: #{tree.postorder(tree.root)}"
 
 puts "Height of root is #{tree.height(tree.root)}"
 
-puts "left left is #{tree.root.left.left.data}"
-puts "Depth of 3 is #{tree.depth(tree.root.left.left)}"
+puts 'Rebalancing...'
+tree.rebalance
+tree.pretty_print
+
+# puts "left left is #{tree.root.left.left.data}"
+# puts "Depth of 3 is #{tree.depth(tree.root.left.left)}"
