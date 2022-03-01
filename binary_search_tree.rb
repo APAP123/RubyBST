@@ -188,28 +188,10 @@ class Tree
     return [depth(goal, node.left, level + 1), depth(goal, node.right, level + 1)].max
   end
 
-  # # Checks left subtree and right subtree of each node to see if height differences between the two is no more than one
-  # def balanced?(node = @root)
-  #   return true if node.nil?
-
-  #   return false if (height(node.left) - height(node.right)).abs > 1
-
-  #   return balanced?(node.left) && balanced?(node.right)
-  # end
-
   # Checks left subtree and right subtree of each node to see if height differences between the two is no more than one
-  # def balanced?(node = @root)
-  #   return true if node.nil?
-  #   puts "Current node: #{node.data}"
-  #   left_height = height(node.left)
-  #   right_height = height(node.right)
-  #   puts "LH: #{left_height}, RH: #{right_height}"
-  #   return true if (left_height - right_height).abs <= 1 && balanced?(node.left) && balanced?(node.right)
-
-  #   false
-  # end
-
-  # Checks left subtree and right subtree of each node to see if height differences between the two is no more than one
+  # NOTE: The definition of a 'balanced' tree seems to not be as clear cut as I thought going into this.
+  # the definition I ended up going with seemed to be the most popular, but argument could be made this isn't strict enough.
+  #Nevertheless, it seems my Odin Project peers went with a similar solution, so this is what I'll be sticking with.
   def balanced?(node = @root)
     return true if node.nil?
 
@@ -231,8 +213,6 @@ class Tree
   end
 end
 
-# arr = ['F', 'D', 'J', 'B', 'E', 'G', 'K', 'A', 'C', 'I', 'H']
-# arr = ['F', 'D', 'J', 'B', 'E', 'G', 'B', 'K', 'A', 'C', 'I', 'H']
 arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 tree = Tree.new(arr.sort.uniq)
 
