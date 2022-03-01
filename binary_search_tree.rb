@@ -173,12 +173,27 @@ class Tree
 
   # Returns height of given node
   def height(node)
-    # todo
+    return 0 if node.nil? || (node.left.nil? && node.right.nil?)
+
+    return [height(node.left), height(node.right)].max + 1
   end
 
   # Returns depth of given node
-  def depth(node)
-    # todo
+  def depth(goal, node = @root, level = 0)
+    puts "level is #{level}"
+    if node.nil?
+      puts 'nil!'
+      return 0
+    end
+
+    puts "current node value is #{node.data}, goal is "
+
+    if node == goal
+      puts 'goal!'
+      return level
+    end
+
+    return [depth(goal, node.left, level + 1), depth(goal, node.right, level + 1)].max
   end
 
   # Checks left subtree and right subtree of each node to see if height differences between the two is no more than one
@@ -222,17 +237,22 @@ tree.pretty_print
 tree.preorder(tree.root) do |node|
   puts "preorder data is #{node.data}"
 end
-puts "before no block pre"
+
 puts "preorder no block: #{tree.preorder(tree.root)}"
 
 tree.inorder(tree.root) do |node|
   puts "preorder data is #{node.data}"
 end
-puts "before no block in"
+
 puts "inorder no block: #{tree.inorder(tree.root)}"
 
 tree.postorder(tree.root) do |node|
   puts "postorder data is #{node.data}"
 end
-puts "before no block in"
+
 puts "postorder no block: #{tree.postorder(tree.root)}"
+
+puts "Height of root is #{tree.height(tree.root)}"
+
+puts "left left is #{tree.root.left.left.data}"
+puts "Depth of 3 is #{tree.depth(tree.root.left.left)}"
