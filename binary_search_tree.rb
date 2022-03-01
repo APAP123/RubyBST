@@ -180,18 +180,8 @@ class Tree
 
   # Returns depth of given node
   def depth(goal, node = @root, level = 0)
-    puts "level is #{level}"
-    if node.nil?
-      puts 'nil!'
-      return 0
-    end
-
-    puts "current node value is #{node.data}, goal is "
-
-    if node == goal
-      puts 'goal!'
-      return level
-    end
+    return 0 if node.nil?
+    return level if node == goal
 
     return [depth(goal, node.left, level + 1), depth(goal, node.right, level + 1)].max
   end
