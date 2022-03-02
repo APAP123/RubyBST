@@ -139,7 +139,7 @@ class Tree
   end
 
   # Traverses tree in in-order (left, root, right) depth-first, yielding nodes to provided block
-  def inorder(node, result = [], &block)
+  def inorder(node = @root, result = [], &block)
     return if node.nil?
 
     result.push(inorder(node.left, &block))
@@ -150,7 +150,7 @@ class Tree
   end
 
   # Traverses tree in pre-order (root, left, right) depth-first, yielding nodes to provided block
-  def preorder(node, result = [], &block)
+  def preorder(node = @root, result = [], &block)
     return if node.nil?
 
     result.push(node)
@@ -163,7 +163,7 @@ class Tree
   end
 
   # Traverses tree in post-order (left, right, root) depth-first, yielding nodes to provided block
-  def postorder(node, result = [], &block)
+  def postorder(node = @root, result = [], &block)
     return if node.nil?
 
     result.push(postorder(node.left, &block))
@@ -191,7 +191,7 @@ class Tree
   # Checks left subtree and right subtree of each node to see if height differences between the two is no more than one
   # NOTE: The definition of a 'balanced' tree seems to not be as clear cut as I thought going into this.
   # the definition I ended up going with seemed to be the most popular, but argument could be made this isn't strict enough.
-  #Nevertheless, it seems my Odin Project peers went with a similar solution, so this is what I'll be sticking with.
+  # Nevertheless, it seems my Odin Project peers went with a similar solution, so this is what I'll be sticking with.
   def balanced?(node = @root)
     return true if node.nil?
 
@@ -205,75 +205,10 @@ class Tree
     @root = Tree.new(inorder(@root).sort).root
   end
 
-  # Method for printing BST to screen in a pretty manner (preorderwritten by a fellow Odin Project student)
+  # Method for printing BST to screen in a pretty manner (rwritten by a fellow Odin Project student)
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
   end
 end
-
-arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-tree = Tree.new(arr.sort.uniq)
-
-tree.pretty_print
-puts "Balanced? #{tree.balanced?}"
-puts "\n\n\n"
-# tree.insert(2)
-tree.insert(23)
-tree.pretty_print
-puts "Balanced? #{tree.balanced?}"
-puts "\n\n\n"
-tree.delete(4)
-tree.pretty_print
-puts "Balanced? #{tree.balanced?}"
-tree.delete(5)
-tree.pretty_print
-puts "Balanced? #{tree.balanced?}"
-
-tree.insert(4)
-tree.pretty_print
-puts "Balanced? #{tree.balanced?}"
-
-tree.delete(3)
-tree.pretty_print
-puts "Balanced? #{tree.balanced?}"
-tree.delete(1)
-tree.pretty_print
-puts "Balanced? #{tree.balanced?}"
-tree.delete(7)
-tree.pretty_print
-puts "Balanced? #{tree.balanced?}"
-
-# tree.level_order do |node|
-#   puts "level order data is #{node.data}"
-# end
-
-# puts tree.level_order
-
-tree.preorder(tree.root) do |node|
-  puts "preorder data is #{node.data}"
-end
-
-puts "preorder no block: #{tree.preorder(tree.root)}"
-
-tree.inorder(tree.root) do |node|
-  puts "preorder data is #{node.data}"
-end
-
-puts "inorder no block: #{tree.inorder(tree.root)}"
-
-tree.postorder(tree.root) do |node|
-  puts "postorder data is #{node.data}"
-end
-
-puts "postorder no block: #{tree.postorder(tree.root)}"
-
-puts "Height of root is #{tree.height(tree.root)}"
-
-puts 'Rebalancing...'
-tree.rebalance
-tree.pretty_print
-
-# puts "left left is #{tree.root.left.left.data}"
-# puts "Depth of 3 is #{tree.depth(tree.root.left.left)}"
